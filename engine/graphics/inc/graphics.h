@@ -7,25 +7,32 @@
 #include <SDL/SDL_mouse.h>
 #include <SDL/SDL_image.h>
 
-class mGraphics{
+#include "graphicsobject.h"
+#include "dlist.h"
+
+class Graphics{
 
 public:
     // Public Methods:
-    mGraphics *InitGraphics(int width, int height, int bpp);
-    mGraphics *GetHandle();
-    ~mGraphics();
+    Graphics *InitGraphics(int width, int height, int bpp);
+    Graphics *GetHandle();
+    ~Graphics();
+    static SDL_Surface* LoadImage(const char* image);
 
 private:
     // Private Methods:
-    mGraphics(int w, int h, int bp);
+    Graphics(int w, int h, int bp);
     void GraphicsThread(void *data);
 
     // Private Variables:
-    static mGraphics *Handle;
-    SDL_Surface *screen;
-    int iWidth;
-    int iHeigth;
-    int iBpp;
+    static Graphics *Handle;
+    static SDL_Surface *screen;
+    static int iWidth;
+    static int iHeigth;
+    static int iBpp;
+    double_linked<GraphicsObject> dlObjectList;
+
+
 }
 
 

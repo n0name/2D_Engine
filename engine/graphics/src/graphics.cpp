@@ -1,29 +1,61 @@
 #include "graphics.h"
 
 
-mGraphics *mGraphics::InitGraphics(int width, int height, int bpp)
+Graphics *Graphics::InitGraphics(int width, int height, int bpp)
 {
-    if (!mGraphics.Handle)
+    if (!Graphics.Handle)
     {
-        mGraphics.Handle = new mGraphics(width, height, bpp);
+        Graphics.Handle = new Graphics(width, height, bpp);
     }
-    return mGraphics.Handle;
+    return Graphics.Handle;
 }
 
-mGraphics::mGraphics(int w, int h, int bp)
+Graphics::Graphics(int w, int h, int bp)
 {
-    this->iWidth = w;
-    this->iHeigth = h;
-    this->iBpp =bp;
+    Graphics.iWidth = w;
+    Graphics.iHeigth = h;
+    Graphics.iBpp =bp;
     SDL_Init(SDL_INIT_VIDEO);
-    this->screen = SDL_SetVideoMode(this->iWidth, this->iHeigth, this->iBpp, SDL_DOUBLEBUF | SDL_ANYFORMAT);
+    Graphics.screen = SDL_SetVideoMode(this->iWidth, this->iHeigth, this->iBpp, SDL_DOUBLEBUF | SDL_ANYFORMAT);
 }
 
-mGraphics::~mGraphics()
+Graphics::~Graphics()
 {
-    SDL_FreeSurface(this->screen);
+    SDL_FreeSurface(Graphics.screen);
 }
-mGraphics *mGraphics::GetHandle()
+Graphics *Graphics::GetHandle()
 {
-    return mGraphics.Handle;
+    if (!Graphics.Handle)
+        throw("Graphics are not initalized!");
+    return Graphics.Handle;
+}
+
+SDL_Surface* Graphics::LoadImage(const char* image)
+{
+    SDL_Surface *tmp;
+    tmp = IMG_Load(image);
+    return SDL_DisplayFormat(tmp);
+}
+
+
+void Graphics::GraphicsThread(void *data)
+{
+    int flag = 1;
+    GraphicsObject *curObject;
+    while(flag)
+    {
+        while(1)
+        {
+           curObject = dlObjectList.get_next();
+           if (curObject)
+           {
+               curObject->blit_to_surface(Graphics.screen, Graphics.);
+           }
+           else
+           {
+               break;
+           }
+        }
+        SDL_Flip(Graphics.screen);
+    }
 }

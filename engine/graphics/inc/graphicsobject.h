@@ -4,16 +4,17 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
-class graphicsObject
+class GraphicsObject
 {
 public:
-    graphicsObject(const char* image, int w, int h);
-    ~graphicsObject();
+    GraphicsObject(const char* image, int w, int h);
+    ~GraphicsObject();
+    void blit_to_surface(SDL_Surface *surface, SDL_Rect r);
 
 private:
     SDL_Surface *pTexture;
     SDL_Rect rect;
-    static SDL_Surface* Load_Image(const char* image);
+
 
 };
 
