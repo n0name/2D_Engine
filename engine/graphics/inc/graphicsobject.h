@@ -10,6 +10,7 @@ public:
     GraphicsObject(const char* image, int w, int h);
     ~GraphicsObject();
     void blit_to_surface(SDL_Surface *surface, SDL_Rect r);
+    bool Visible;
 
 private:
     SDL_Surface *pTexture;

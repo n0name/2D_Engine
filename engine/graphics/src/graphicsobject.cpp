@@ -1,17 +1,27 @@
 #include "graphicsobject.h"
 #include "graphics.h"
 
-GraphicsObject::GraphicsObject(char *image, int w, int h)
+GraphicsObject::GraphicsObject(const char *image, int w, int h)
 {
     SDL_Rect r;
     this->pTexture = Graphics::LoadImage(image);
 
-    r.x = 0;
-    r.y = 0;
-    r.w = w;
-    r.h = h;
+    if (w && h)
+    {
+        r.x = 0;
+        r.y = 0;
+        r.w = w;
+        r.h = h;
+    }else
+    {
+        r.x = 0;
+        r.y = 0;
+        r.w = this->pTexture->w;
+        r.h = this->pTexture->h;
+    }
 
     this->rect = r;
+    this->Visible = true;
 }
 
 GraphicsObject::~GraphicsObject()

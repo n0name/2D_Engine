@@ -1,6 +1,6 @@
 #ifndef DLIST_H
 #define DLIST_H
-
+#include <stdlib.h>
 
 template <typename T>
 class double_linked
@@ -15,7 +15,11 @@ class double_linked
     node* head;
     node* tail;
 public:
-    double_linked() : head( NULL ), tail ( NULL ) {}
+    double_linked()
+    {
+        this->head = NULL;
+        this->tail = NULL;
+    }
     template<int N>
     double_linked( T (&arr) [N]) : head( NULL ), tail ( NULL )
     {
@@ -30,6 +34,7 @@ public:
     T pop_back();
     T pop_front();
     T get_next();
+    T get_head();
 
 
     ~double_linked()

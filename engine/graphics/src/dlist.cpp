@@ -75,5 +75,11 @@ T double_linked<T>::get_next()
     {
         curNode = curNode->next;
     }
-    return curNode;
+    return curNode->data;
+}
+
+template<typename T>
+T double_linked<T>::get_head()
+{
+    return this->head->data;
 }
