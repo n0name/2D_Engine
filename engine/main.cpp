@@ -7,11 +7,11 @@
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP 8
 
-int main()
+int main(int argc, char *argv[])
 {
     Graphics::InitGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
 
-    Graphics::AddObject(new GraphicsObject("test.jpg", 0, 0));
+    Graphics::AddObject(new GraphicsObject("pacman.jpg", 0, 0));
 
     while(1)
     {

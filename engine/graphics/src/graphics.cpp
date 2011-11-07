@@ -1,6 +1,5 @@
 #include "graphics.h"
 
-
 Graphics* Graphics::Handle;
 SDL_Surface* Graphics::screen;
 SDL_Rect    Graphics::screenRect;
@@ -8,8 +7,8 @@ int Graphics::iWidth;
 int Graphics::iHeigth;
 int Graphics::iBpp;
 
-double_linked<GraphicsObject *> Graphics::dlObjectList;
-double_linked<GraphicsObject *> Graphics::dlSpriteList;
+GraphicsObject *Graphics::dlObjectList[100];
+GraphicsObject *Graphics::dlSpriteList[100];
 
 struct ThreadData_t Graphics::ThreadData;
 
@@ -62,7 +61,7 @@ SDL_Surface* Graphics::LoadImage(const char* image)
 int Graphics::GraphicsThread(void *data)
 {
     int flag = 1;
-    GraphicsObject *curObject = Graphics::dlObjectList.get_head();
+    int curObjectIndex = 0;
     struct ThreadData_t *privateData = (struct ThreadData_t *)data;
 
 
@@ -70,17 +69,10 @@ int Graphics::GraphicsThread(void *data)
     {
         SDL_LockMutex(privateData->graphMutex);
 
-        while(1)
+        while(dlObjectList[curObjectIndex])
         {
-           if (curObject)
-           {
-               curObject->blit_to_surface(Graphics::screen, Graphics::screenRect);
-               curObject = Graphics::dlObjectList.get_next();
-           }
-           else
-           {
-               break;
-           }
+        	dlObjectList[curObjectIndex]->blit_to_surface(Graphics::screen, Graphics::screenRect);
+        	curObjectIndex++;
         }
         SDL_Flip(Graphics::screen);
 
@@ -97,11 +89,17 @@ void Graphics::Update()
 
 void Graphics::AddObject(GraphicsObject *obj)
 {
-    dlObjectList.push_front(obj);
+    int i = 0;
+    while(dlObjectList[i++]);
+    dlObjectList[i-1] = obj;
+    i++;
 }
 
 void Graphics::AddSprite(GraphicsObject *spr)
 {
-    dlSpriteList.push_front(spr);
+	int i = 0;
+	while(dlSpriteList[i++]);
+	dlSpriteList[i-1] = spr;
+	i++;
 }
 

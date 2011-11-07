@@ -8,7 +8,6 @@
 #include <SDL/SDL_image.h>
 
 #include "graphicsobject.h"
-#include "dlist.h"
 
 struct ThreadData_t {
         SDL_mutex *graphMutex;
@@ -38,18 +37,12 @@ private:
     static int iWidth;
     static int iHeigth;
     static int iBpp;
-    static double_linked<GraphicsObject *> dlObjectList;
-    static double_linked<GraphicsObject *> dlSpriteList;
+    static GraphicsObject * dlObjectList[100];
+    static GraphicsObject * dlSpriteList[100];
 
     static struct ThreadData_t ThreadData;
 
 
 };
-
-
-
-
-
-
 
 #endif /// GRAPHICS_H
