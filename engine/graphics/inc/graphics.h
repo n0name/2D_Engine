@@ -9,8 +9,11 @@
 
 #include "graphicsobject.h"
 
+
+
 struct ThreadData_t {
         SDL_mutex *graphMutex;
+        SDL_Thread *thread;
 };
 
 class Graphics{
@@ -24,6 +27,7 @@ public:
     static void Update();
     static void AddObject(GraphicsObject *obj);
     static void AddSprite(GraphicsObject *spr);
+    static void DeinitGraphics();
 
 private:
     // Private Methods:

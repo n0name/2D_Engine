@@ -9,14 +9,19 @@
 
 int main(int argc, char *argv[])
 {
+	bool running = 1;
+
     Graphics::InitGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
 
     Graphics::AddObject(new GraphicsObject("pacman.jpg", 0, 0));
 
-    while(1)
+    while(running)
     {
+
         Graphics::Update();
     }
+
+    Graphics::DeinitGraphics();
 
     return 0;
 }

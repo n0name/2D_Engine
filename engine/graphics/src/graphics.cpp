@@ -20,7 +20,7 @@ Graphics *Graphics::InitGraphics(int width, int height, int bpp)
         Graphics::Handle = new Graphics(width, height, bpp);
         Graphics::ThreadData.graphMutex = SDL_CreateMutex();
         SDL_LockMutex(Graphics::ThreadData.graphMutex);
-        SDL_CreateThread(Graphics::GraphicsThread,  (void *)(&Graphics::ThreadData));
+        Graphics::ThreadData.thread = SDL_CreateThread(Graphics::GraphicsThread,  (void *)(&Graphics::ThreadData));
     }
     return Graphics::Handle;
 }
@@ -37,6 +37,23 @@ Graphics::Graphics(int w, int h, int bp)
     Graphics::screenRect.h = h;
     Graphics::screenRect.x = 0;
     Graphics::screenRect.y = 0;
+}
+
+void Graphics::DeinitGraphics()
+{
+	if (Graphics::Handle)
+		SDL_KillThread(Graphics::ThreadData.thread);
+		SDL_FreeSurface(Graphics::screen);
+		for (int i = 0; Graphics::dlObjectList[i]; i++ )
+		{
+			free(Graphics::dlObjectList[i]);
+		}
+		for (int i = 0; Graphics::dlSpriteList[i]; i++ )
+		{
+			free(Graphics::dlSpriteList[i]);
+		}
+		delete Graphics::Handle;
+		SDL_Quit();
 }
 
 Graphics::~Graphics()
@@ -102,4 +119,6 @@ void Graphics::AddSprite(GraphicsObject *spr)
 	dlSpriteList[i-1] = spr;
 	i++;
 }
+
+
 
