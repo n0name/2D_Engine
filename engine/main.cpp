@@ -15,8 +15,27 @@ int main(int argc, char *argv[])
 
     Graphics::AddObject(new GraphicsObject("pacman.jpg", 0, 0));
 
+
+    SDL_Event event;
     while(running)
     {
+    	/// @TODO add keyboard handler
+    	while(SDL_PollEvent(&event))
+    	{
+    		switch(event.type)
+    		{
+    		case SDL_KEYUP:
+				if(SDLK_ESCAPE == event.key.keysym.sym)
+				{
+					running = 0;
+				}
+    			break;
+    		case SDL_KEYDOWN:
+    			break;
+    		default:
+    			break;
+    		}
+    	}
 
         Graphics::Update();
     }
