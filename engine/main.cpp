@@ -2,47 +2,46 @@
 
 #include <math.h>
 #include <graphics.h>
+#include <input.h>
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP 8
 
+void InitAll();
+void DeinitAll();
+
 int main(int argc, char *argv[])
 {
 	bool running = 1;
 
-    Graphics::InitGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
+	InitAll();
 
     Graphics::AddObject(new GraphicsObject("pacman.jpg", 0, 0));
 
-
-    SDL_Event event;
     while(running)
     {
-    	/// @TODO add keyboard handler
-    	while(SDL_PollEvent(&event))
+    	if (KeyboardHandler::isPressed(SDLK_ESCAPE))
     	{
-    		switch(event.type)
-    		{
-    		case SDL_KEYUP:
-				if(SDLK_ESCAPE == event.key.keysym.sym)
-				{
-					running = 0;
-				}
-    			break;
-    		case SDL_KEYDOWN:
-    			break;
-    		default:
-    			break;
-    		}
+    		running = 0;
     	}
-
         Graphics::Update();
     }
 
-    Graphics::DeinitGraphics();
+    DeinitAll();
 
     return 0;
 }
 
 
+void InitAll()
+{
+	Graphics::InitGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
+	KeyboardHandler::InitKeyboardHandler();
+}
+
+void DeinitAll()
+{
+	KeyboardHandler::DeinitKeyboardHandler();
+	Graphics::DeinitGraphics();
+}

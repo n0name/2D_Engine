@@ -4,29 +4,27 @@
 #include <SDL/SDL.h>
 typedef SDLKey Key;
 
+
 class KeyboardHandler {
 public:
 //Public Methods
     static KeyboardHandler* InitKeyboardHandler();
     static void DeinitKeyboardHandler();
-    
+
     static bool isPressed( Key keyCode);
 
     static bool isReleased( Key keyCode);
 
 private:
 // Private Methods
-    void handleKeyboardEvent(SDL_Event Event) {
-              if ( 0 < Event.key.keysym.sym && 400 > Event.key.keysym.sym)
-                  keyState[Event.key.keysym.sym] = Event.key.state;
-    }
+    static int handleKeyboardEvent(void * data);
+
 // Private Variables
     KeyboardHandler();
-    static KeyboardHandler* handle;
+    static KeyboardHandler* Handle;
     static Uint8 keyState[400];
+    static SDL_Thread *eventThread;
+
 };
-
-
-
 
 #endif //INPUT_H
