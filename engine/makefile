@@ -3,7 +3,7 @@ TARGET = engine_test
 # Default build type
 TYPE = debug
 # Which directories contain source files
-DIRS = . graphics/src
+DIRS = . graphics/src input/src
 # Which libraries are linked
 LIBS = SDL SDL_image SDL_ttf pthread
 # Dynamic libraries
@@ -29,7 +29,7 @@ MACROS = NDEBUG
 endif
 
 # Add directories to the include and library paths
-INCPATH = . graphics/inc
+INCPATH = . graphics/inc input/inc
 LIBPATH = 
 
 # Which files to add to backups, apart from the source code
