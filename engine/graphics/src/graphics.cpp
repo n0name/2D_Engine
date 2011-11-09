@@ -42,28 +42,26 @@ Graphics::Graphics(int w, int h, int bp)
 void Graphics::DeinitGraphics()
 {
 	if (Graphics::Handle)
-		SDL_KillThread(Graphics::ThreadData.thread);
-		SDL_FreeSurface(Graphics::screen);
+		Graphics::ThreadData.flag = 0;
+		SDL_WaitThread(Graphics::ThreadData.thread, NULL);
 		for (int i = 0; Graphics::dlObjectList[i]; i++ )
 		{
 			free(Graphics::dlObjectList[i]);
+			Graphics::dlObjectList[i] = NULL;
 		}
 		for (int i = 0; Graphics::dlSpriteList[i]; i++ )
 		{
 			free(Graphics::dlSpriteList[i]);
+			Graphics::dlSpriteList[i] = NULL;
 		}
 		delete Graphics::Handle;
 		SDL_Quit();
 }
 
-Graphics::~Graphics()
-{
-    SDL_FreeSurface(Graphics::screen);
-}
 Graphics *Graphics::GetHandle()
 {
     if (!Graphics::Handle)
-        throw("Graphics are not initalized!");
+        return NULL;
     return Graphics::Handle;
 }
 
@@ -71,18 +69,20 @@ SDL_Surface* Graphics::LoadImage(const char* image)
 {
     SDL_Surface *tmp;
     tmp = IMG_Load(image);
-    return SDL_DisplayFormat(tmp);
+    if (tmp)
+    	return SDL_DisplayFormat(tmp);
+    return NULL;
 }
 
 
 int Graphics::GraphicsThread(void *data)
 {
-    int flag = 1;
     int curObjectIndex = 0;
     struct ThreadData_t *privateData = (struct ThreadData_t *)data;
+    privateData->flag = 1;
 
 
-    while(flag)
+    while(privateData->flag)
     {
         SDL_LockMutex(privateData->graphMutex);
 
@@ -107,6 +107,12 @@ void Graphics::Update()
 void Graphics::AddObject(GraphicsObject *obj)
 {
     int i = 0;
+    if (!obj->coorect)
+    {
+    	printf("Object not created correctly");
+    	delete obj;
+    	return;
+    }
     while(dlObjectList[i++]);
     dlObjectList[i-1] = obj;
     i++;

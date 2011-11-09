@@ -8,21 +8,17 @@
 #include <SDL/SDL_image.h>
 
 #include "graphicsobject.h"
+#include "types.h"
 
 
-
-struct ThreadData_t {
-        SDL_mutex *graphMutex;
-        SDL_Thread *thread;
-};
 
 class Graphics{
 
 public:
+
     // Public Methods:
     static Graphics *InitGraphics(int width, int height, int bpp);
     static Graphics *GetHandle();
-    ~Graphics();
     static SDL_Surface* LoadImage(const char* image);
     static void Update();
     static void AddObject(GraphicsObject *obj);
@@ -30,6 +26,7 @@ public:
     static void DeinitGraphics();
 
 private:
+
     // Private Methods:
     Graphics(int w, int h, int bp);
     static int GraphicsThread(void *data);
@@ -45,7 +42,6 @@ private:
     static GraphicsObject * dlSpriteList[100];
 
     static struct ThreadData_t ThreadData;
-
 
 };
 

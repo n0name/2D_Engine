@@ -11,6 +11,7 @@ public:
     ~GraphicsObject();
     void blit_to_surface(SDL_Surface *surface, SDL_Rect r);
     bool Visible;
+    bool coorect;
 
 private:
     SDL_Surface *pTexture;

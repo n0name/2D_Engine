@@ -3,7 +3,7 @@
 
 KeyboardHandler* KeyboardHandler::Handle;
 Uint8 KeyboardHandler::keyState[400];
-SDL_Thread* KeyboardHandler::eventThread;
+ThreadData_t KeyboardHandler::ThreadData;
 
 KeyboardHandler::KeyboardHandler()
 {
@@ -15,7 +15,7 @@ KeyboardHandler *KeyboardHandler::InitKeyboardHandler()
   if (!KeyboardHandler::Handle)
   {
     KeyboardHandler::Handle = new KeyboardHandler();
-    eventThread = SDL_CreateThread(KeyboardHandler::handleKeyboardEvent, NULL);
+    KeyboardHandler::ThreadData.thread = SDL_CreateThread(KeyboardHandler::handleKeyboardEvent, &KeyboardHandler::ThreadData);
   }
   return KeyboardHandler::Handle;
 }
@@ -24,7 +24,8 @@ void KeyboardHandler::DeinitKeyboardHandler()
 {
 	if (KeyboardHandler::Handle)
 	{
-		SDL_KillThread(eventThread);
+		KeyboardHandler::ThreadData.flag = 0;
+		SDL_WaitThread(KeyboardHandler::ThreadData.thread, NULL);
 		delete KeyboardHandler::Handle;
 	}
 }
@@ -51,14 +52,30 @@ bool KeyboardHandler::isReleased( Key keyCode)
 int KeyboardHandler::handleKeyboardEvent(void *data)
 {
 	SDL_Event Event;
-	int flag = 1;
-	while (flag)
+	ThreadData_t *private_data = (ThreadData_t *)data;
+
+
+	while (private_data->flag)
 	{
 		while(SDL_PollEvent(&Event))
 		{
-			if ( (0 < Event.key.keysym.sym) && (400 > Event.key.keysym.sym) )
-				keyState[Event.key.keysym.sym] = Event.key.state;
+			switch(Event.type)
+			{
+			case SDL_KEYUP:
+			case SDL_KEYDOWN:
+				if ( (0 < Event.key.keysym.sym) && (400 > Event.key.keysym.sym) )
+					keyState[Event.key.keysym.sym] = Event.key.state;
+				break;
+			}
+
 		}
 	}
 	return 0;
+}
+
+KeyboardHandler* KeyboardHandler::GetHandle()
+{
+	if (!Handle)
+		return NULL;
+	return Handle;
 }

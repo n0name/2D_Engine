@@ -4,7 +4,11 @@
 GraphicsObject::GraphicsObject(const char *image, int w, int h)
 {
     SDL_Rect r;
+    this->coorect = false;
+
     this->pTexture = Graphics::LoadImage(image);
+
+    if (this->pTexture) this->coorect = true;
 
     if (w && h)
     {
@@ -22,6 +26,7 @@ GraphicsObject::GraphicsObject(const char *image, int w, int h)
 
     this->rect = r;
     this->Visible = true;
+
 }
 
 GraphicsObject::~GraphicsObject()

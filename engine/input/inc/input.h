@@ -2,6 +2,8 @@
 #define INPUT_H
 
 #include <SDL/SDL.h>
+#include "types.h"
+
 typedef SDLKey Key;
 
 
@@ -14,6 +16,7 @@ public:
     static bool isPressed( Key keyCode);
 
     static bool isReleased( Key keyCode);
+    static KeyboardHandler* GetHandle();
 
 private:
 // Private Methods
@@ -23,7 +26,7 @@ private:
     KeyboardHandler();
     static KeyboardHandler* Handle;
     static Uint8 keyState[400];
-    static SDL_Thread *eventThread;
+    static ThreadData_t ThreadData;
 
 };
 
